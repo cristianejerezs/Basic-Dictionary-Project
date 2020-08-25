@@ -1,23 +1,16 @@
 import json
-from difflib import SequenceMatcher
 from difflib import get_close_matches
+from difflib import SequenceMatcher
+
 data = json.load(open("DicData.json"))
 
 word = str(input("Please input a word or vague description:").casefold())
 
-def LookUp2(word):
-    if data.__contains__(word):
-        return print(str(data[word]).strip("[]").replace("',","\n"))
-    elif not data.__contains__(word):
-        count=0
-        print("Did you mean?:")
-        for i in get_close_matches(word,data.keys()):
-            count+=1
-            print(str(count )+i)
-        correction = input("1,2,3: " )
-        if data.__contains__(get_close_matches(word,data.keys())[int(correction)-1]):
-            print(str(data[get_close_matches(word,data.keys())[int(correction)-1]]))
-        elif not data.__contains__(get_close_matches(word,data.keys())[int(correction)-1]):
-            print("Sorry, i can't do this :C")
+def LookUp(word):
+    if word in data:
+        return data[word]
+    elif word not in data:
+        match = get_close_matches(word,data,1)
+        return data[match[0]]
 
-LookUp2(word)
+LookUp(word)
